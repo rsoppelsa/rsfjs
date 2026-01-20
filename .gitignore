@@ -1,3 +1,6 @@
+# IDE
+.vscode/*
+
 # Logs
 logs
 *.log
@@ -137,3 +140,13 @@ dist
 # Vite logs files
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
+
+# Package lock (optional)
+package-lock.json
+
+# Temp files
+temp.js
+
+# Claude Code
+CLAUDE.md
+.github/CLAUDE.md

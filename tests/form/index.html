@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form Handling - RSF Example</title>
+    <script src="../../rsf.js"></script>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            background-color: #f5f5f5;
+        }
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        .description {
+            color: #666;
+            margin-bottom: 30px;
+        }
+        .container {
+            background: white;
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #2c3e50;
+        }
+        input, textarea {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #e2e8f0;
+            border-radius: 6px;
+            font-size: 14px;
+            font-family: inherit;
+            box-sizing: border-box;
+        }
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: #3498db;
+        }
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+        button[type="submit"] {
+            width: 100%;
+            padding: 12px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+        }
+        button[type="submit"]:hover {
+            background-color: #2980b9;
+        }
+        .success-message {
+            background-color: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 6px;
+            margin-top: 20px;
+            border-left: 4px solid #28a745;
+        }
+        .success-message h3 {
+            margin: 0 0 10px 0;
+        }
+        .success-message p {
+            margin: 5px 0;
+        }
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #3498db;
+            text-decoration: none;
+        }
+        .back-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <a href="../index.html" class="back-link">← Back to Examples</a>
+    <h1>Form Handling</h1>
+    <p class="description">
+        A contact form demonstrating form state management, input handling, and form submission.
+    </p>
+
+    <div id="app"></div>
+
+    <script>
+        rsf('#app', r => {
+            const formData = new r.State({ name: '', email: '', message: '' });
+            const submitted = new r.State(false);
+
+            const handleSubmit = (e) => {
+                e.preventDefault();
+                console.log('Form submitted:', formData.get());
+                submitted.set(true);
+            };
+
+            const resetForm = () => {
+                formData.set({ name: '', email: '', message: '' });
+                submitted.set(false);
+            };
+
+            r.div({ class: 'container' }, r => {
+                r.div({ watch: submitted }, r => {
+                    if (submitted.get()) {
+                        r.div({ class: 'success-message' }, r => {
+                            r.h3({}, 'Thank you for your message!');
+                            r.p({}, `Name: ${formData.get().name}`);
+                            r.p({}, `Email: ${formData.get().email}`);
+                            r.p({}, `Message: ${formData.get().message}`);
+                            r.button({
+                                click: resetForm,
+                                style: {
+                                    marginTop: '15px',
+                                    padding: '8px 16px',
+                                    backgroundColor: '#28a745',
+                                    color: 'white',
+                                    border: 'none',
+                                    borderRadius: '4px',
+                                    cursor: 'pointer'
+                                }
+                            }, 'Send Another Message');
+                        });
+                    } else {
+                        r.form({ submit: handleSubmit }, r => {
+                            r.div({ class: 'form-group' }, r => {
+                                r.label({}, 'Name');
+                                r.input({
+                                    type: 'text',
+                                    placeholder: 'Your name',
+                                    required: true,
+                                    value: formData.get().name,
+                                    input: (e) => formData.update(data => ({
+                                        ...data,
+                                        name: e.target.value
+                                    }))
+                                });
+                            });
+
+                            r.div({ class: 'form-group' }, r => {
+                                r.label({}, 'Email');
+                                r.input({
+                                    type: 'email',
+                                    placeholder: 'your.email@example.com',
+                                    required: true,
+                                    value: formData.get().email,
+                                    input: (e) => formData.update(data => ({
+                                        ...data,
+                                        email: e.target.value
+                                    }))
+                                });
+                            });
+
+                            r.div({ class: 'form-group' }, r => {
+                                r.label({}, 'Message');
+                                r.textarea({
+                                    placeholder: 'Your message...',
+                                    required: true,
+                                    value: formData.get().message,
+                                    input: (e) => formData.update(data => ({
+                                        ...data,
+                                        message: e.target.value
+                                    }))
+                                });
+                            });
+
+                            r.button({ type: 'submit' }, 'Send Message');
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

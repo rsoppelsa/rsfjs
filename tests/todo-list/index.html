@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todo List - RSF Example</title>
+    <script src="../../rsf.js"></script>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            background-color: #f5f5f5;
+        }
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        .description {
+            color: #666;
+            margin-bottom: 30px;
+        }
+        .container {
+            background: white;
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .add-todo {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .add-todo input {
+            flex: 1;
+            padding: 10px;
+            border: 2px solid #e2e8f0;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+        .add-todo input:focus {
+            outline: none;
+            border-color: #3498db;
+        }
+        .add-todo button {
+            padding: 10px 20px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .add-todo button:hover {
+            background-color: #2980b9;
+        }
+        ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        li {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px;
+            margin: 8px 0;
+            background: #f8f9fa;
+            border-radius: 6px;
+            border-left: 4px solid #3498db;
+        }
+        li.completed {
+            opacity: 0.6;
+            border-left-color: #95a5a6;
+        }
+        li input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+        li span {
+            flex: 1;
+        }
+        li.completed span {
+            text-decoration: line-through;
+        }
+        li button {
+            padding: 6px 12px;
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        li button:hover {
+            background-color: #c0392b;
+        }
+        .empty {
+            text-align: center;
+            color: #999;
+            padding: 40px;
+        }
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #3498db;
+            text-decoration: none;
+        }
+        .back-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <a href="../index.html" class="back-link">← Back to Examples</a>
+    <h1>Todo List</h1>
+    <p class="description">
+        A todo list app demonstrating list management, user input, and state updates.
+    </p>
+
+    <div id="app"></div>
+
+    <script>
+        rsf('#app', r => {
+            const todos = new r.State([
+                { id: 1, text: 'Learn RSF', completed: false },
+                { id: 2, text: 'Build an app', completed: false }
+            ]);
+            const newTodoText = new r.State('');
+            let nextId = 3;
+
+            const addTodo = () => {
+                const text = newTodoText.get().trim();
+                if (text) {
+                    todos.update(list => [...list, { id: nextId++, text, completed: false }]);
+                    newTodoText.set('');
+                }
+            };
+
+            const toggleTodo = (id, completed) => {
+                todos.update(list =>
+                    list.map(t => t.id === id ? { ...t, completed } : t)
+                );
+            };
+
+            const deleteTodo = (id) => {
+                todos.update(list => list.filter(t => t.id !== id));
+            };
+
+            r.div({ class: 'container' }, r => {
+                r.div({ class: 'add-todo' }, r => {
+                    r.input({
+                        type: 'text',
+                        placeholder: 'Add a new todo...',
+                        watch: newTodoText,
+                        value: newTodoText.get(),
+                        input: (e) => newTodoText.set(e.target.value),
+                        keydown: (e) => {
+                            if (e.key === 'Enter') addTodo();
+                        }
+                    });
+                    r.button({ click: addTodo }, 'Add');
+                });
+
+                r.div({ watch: todos }, r => {
+                    if (todos.get().length === 0) {
+                        r.div({ class: 'empty' }, 'No todos yet. Add one above!');
+                    } else {
+                        r.ul({}, r => {
+                            todos.get().forEach(todo => {
+                                r.li({
+                                    class: todo.completed ? 'completed' : ''
+                                }, r => {
+                                    r.input({
+                                        type: 'checkbox',
+                                        checked: todo.completed,
+                                        change: (e) => toggleTodo(todo.id, e.target.checked)
+                                    });
+                                    r.span({}, todo.text);
+                                    r.button({ click: () => deleteTodo(todo.id) }, 'Delete');
+                                });
+                            });
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

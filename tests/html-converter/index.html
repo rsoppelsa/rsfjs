@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HTML to RSF Converter - RSF Example</title>
+    <script src="../../rsf.js"></script>
+    <script src="../../renderHtmlToRsf.js"></script>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            background-color: #f5f5f5;
+        }
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        .description {
+            color: #666;
+            margin-bottom: 30px;
+        }
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #3498db;
+            text-decoration: none;
+        }
+        .back-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <a href="../index.html" class="back-link">← Back to Examples</a>
+    <h1>HTML to RSF Converter</h1>
+    <p class="description">
+        A developer utility for converting HTML code to RSF syntax. Paste your HTML and get the equivalent RSF code.
+        This tool requires the <code>renderHtmlToRsf.js</code> utility script.
+    </p>
+
+    <div id="app"></div>
+
+    <script>
+        rsf('#app', r => {
+            renderHtmlToRsf(r);
+        });
+    </script>
+</body>
+</html>
