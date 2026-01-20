@@ -1,4 +1,4 @@
-# RSF - Reactive Simple Framework
+# RSF - Really Simple Framework
 
 A lightweight JavaScript framework for building reactive web applications.
 
