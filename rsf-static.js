@@ -35,7 +35,7 @@
         ];
 
         const tags = [
-            'html', 'head', 'body', 'title', 'meta', 'link', 'script', 'style',
+            'html', 'head', 'body', 'title', 'meta', 'link', 'script', 'style', 'noscript',
             'address', 'article', 'aside', 'footer', 'header', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'main', 'nav', 'section',
             'blockquote', 'dd', 'div', 'dl', 'dt', 'figcaption', 'figure', 'hr', 'li', 'ol', 'p', 'pre', 'ul',
             'a', 'abbr', 'b', 'bdi', 'bdo', 'br', 'cite', 'code', 'data', 'dfn', 'em', 'i', 'kbd', 'mark',
@@ -51,6 +51,45 @@
 
         const selfClosingTags = ['area', 'base', 'br', 'col', 'embed', 'hr', 'img', 'input', 'link', 'meta', 'param', 'source', 'track', 'wbr'];
 
+        /**
+         * State for static rendering.
+         *
+         * Mirrors the browser State in rsf.js, with one difference: there is
+         * nothing to notify. Static output is a single pass, so no watcher can
+         * re-render. Values still update, so a component that sets state while
+         * rendering produces the same markup it would in the browser; only the
+         * reactivity is absent.
+         */
+        class State {
+            constructor(initialValue, options = {}) {
+                this._value = initialValue;
+                this._compare = options.compare || ((a, b) => a === b);
+            }
+
+            get() {
+                return this._value;
+            }
+
+            set(newValue, force) {
+                if (!this._compare(this._value, newValue) || force) {
+                    this._value = newValue;
+                }
+            }
+
+            get value() {
+                return this._value;
+            }
+
+            set value(newValue) {
+                this.set(newValue);
+            }
+
+            update(updaterFn, force) {
+                this.set(updaterFn(this.get()), force);
+                return this;
+            }
+        }
+
         let html = '';
 
         const camelToKebab = str => str.replace(/[A-Z]/g, letter => `-${letter.toLowerCase()}`);
@@ -65,6 +104,8 @@
         };
 
         const r = {
+            State,
+
             elem(tag = 'div', props = {}, content) {
                 const childContent = content;
 

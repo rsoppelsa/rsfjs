@@ -7,6 +7,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.0] - 2026-07-23
+
+### Added
+
+- `State` in `rsf-static.js`, so `createStatic` can render components that use
+  state. Previously `new r.State(...)` threw `r.State is not a constructor`,
+  which made any real component unrenderable server-side.
+- `noscript` in the tag lists of both `rsf.js` and `rsf-static.js`, giving
+  `r.noscript()` alongside the existing `r.elem('noscript', ...)`.
+- Node tests for `rsf-static.js` (`npm test`, or `node --test tests/`). The
+  browser examples in `tests/index.html` are unchanged.
+
+### Notes
+
+- Static `State` mirrors the browser API, except that `set()` updates the value
+  without notifying: static output is a single pass, so nothing can re-render.
+  Components that change state while rendering therefore produce the same markup
+  in both environments; only reactivity is absent.
+- No breaking changes. Both additions are new surface - `createStatic` previously
+  threw on state rather than behaving differently.
+
 ## [1.0.0] - 2025-12-06
 
 ### Added

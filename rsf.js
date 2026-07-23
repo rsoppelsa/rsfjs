@@ -27,7 +27,7 @@
             'output', 'progress', 'select', 'textarea',
             'canvas',
             'svg', 'circle', 'rect', 'text', 'path',
-            'iframe'
+            'iframe', 'noscript'
         ];
 
         const events = [

@@ -1,6 +1,6 @@
 {
     "name": "rsfjs",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "description": "A lightweight JavaScript framework for building reactive web applications",
     "main": "rsf.js",
     "module": "rsf.js",
@@ -18,7 +18,7 @@
         "README.md"
     ],
     "scripts": {
-        "test": "echo \"Open tests/index.html in a browser to run tests\" && exit 0",
+        "test": "node --test tests/ && echo \"Browser examples: open tests/index.html\"",
         "minify": "npm run minify:rsf && npm run minify:static && npm run minify:html && npm run minify:reactive",
         "minify:rsf": "terser rsf.js -c -m -o rsf.min.js",
         "minify:static": "terser rsf-static.js -c -m -o rsf-static.min.js",
