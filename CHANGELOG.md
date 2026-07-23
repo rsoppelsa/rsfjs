@@ -7,6 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.1] - 2026-07-23
+
+### Changed
+
+- Rebuilt the minified artifacts with a pinned toolchain. No source or behaviour
+  change: the files are a few bytes smaller only because a newer terser drops
+  redundant parentheses.
+
+### Fixed
+
+- Builds are now reproducible. `terser` was a caret range and `package-lock.json`
+  was gitignored, so nothing pinned the tool producing the committed `.min.js`
+  files - and with no local install, `npm run minify` silently fell through to an
+  apt-installed terser on `PATH`. Pinned exactly, lockfile committed.
+
 ## [1.1.0] - 2026-07-23
 
 ### Added
